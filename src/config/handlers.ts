@@ -14,7 +14,10 @@ export function createRouteHandlers({
     accessServerFn?: AccessServerFn;
     apiToken?: string;
 }) {
-    const POST = async (req: Request, { params }: { params: { s3: string[] } }) => {
+    const POST = async (
+        req: Request,
+        { params }: { params: { s3: string[] } },
+    ) => {
         const access = await _checkAccess(accessServerFn, req);
         if (!access) {
             return sendErrorReposnse("Access Denied.", "access", 403);
@@ -22,7 +25,11 @@ export function createRouteHandlers({
 
         const token = _checkTokenExist(apiToken);
         if (!token) {
-            return sendErrorReposnse("Invalid API Call: token not found", "server", 400);
+            return sendErrorReposnse(
+                "Invalid API Call: token not found",
+                "server",
+                400,
+            );
         }
 
         const { action, currentPath } = _checkUrl(params.s3, req.url);
@@ -53,7 +60,10 @@ export function createRouteHandlers({
     return { POST };
 }
 
-async function _checkAccess(accessServerFn: AccessServerFn | undefined, req: Request) {
+async function _checkAccess(
+    accessServerFn: AccessServerFn | undefined,
+    req: Request,
+) {
     if (accessServerFn) {
         return accessServerFn({ req });
     }
@@ -73,17 +83,6 @@ function _checkUrl(urlParams: string[], url: string) {
     return { action, currentPath };
 }
 
-function _generateHeader(headers: Headers, token: string) {
-    const _headers: { [key: string]: string } = {};
-    headers.forEach((value, key) => {
-        _headers[key] = value;
-    });
-    return {
-        ..._headers,
-        Authorization: `Bearer ${token}`,
-    };
-}
-
 async function _fetch(req: Request, endPoint: string, token: string) {
     let body: any;
 
@@ -94,13 +93,17 @@ async function _fetch(req: Request, endPoint: string, token: string) {
     }
 
     try {
-        const apiRes: AxiosResponse<ManagerResultError | ManagerResultSuccess<any>> =
-            await axios({
-                method: "POST",
-                url: endPoint,
-                headers: _generateHeader(req.headers, token),
-                data: body,
-            });
+        const apiRes: AxiosResponse<
+            ManagerResultError | ManagerResultSuccess<any>
+        > = await axios({
+            method: "POST",
+            url: endPoint,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": req.headers.get("Content-Type"),
+            },
+            data: body,
+        });
         return apiRes.data;
     } catch (error: any) {
         if (error instanceof AxiosError) {
