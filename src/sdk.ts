@@ -162,7 +162,12 @@ export class SDK {
         events?: Events<"trashFiles">,
         fetchConfigs?: FetchConfig,
     ) {
-        return this.createFetchFn<"trashFiles">("trashFiles", data, events, fetchConfigs);
+        return this.createFetchFn<"trashFiles">(
+            "trashFiles",
+            data,
+            events,
+            fetchConfigs,
+        );
     }
 
     recoverFiles(
@@ -191,7 +196,10 @@ export class SDK {
         );
     }
 
-    getTrashFiles(events?: Events<"getTrashFiles">, fetchConfigs?: FetchConfig) {
+    getTrashFiles(
+        events?: Events<"getTrashFiles">,
+        fetchConfigs?: FetchConfig,
+    ) {
         return this.createFetchFn<"getTrashFiles">(
             "getTrashFiles",
             undefined,
@@ -218,6 +226,24 @@ export class SDK {
         events?: Events<"uploadFile">,
         fetchConfigs?: FetchConfig,
     ) {
-        return this.createFetchFn<"uploadFile">("uploadFile", data, events, fetchConfigs);
+        return this.createFetchFn<"uploadFile">(
+            "uploadFile",
+            data,
+            events,
+            fetchConfigs,
+        );
+    }
+
+    getFile(
+        data: DataParameterType<"getFile">,
+        events?: Events<"getFile">,
+        fetchConfigs?: FetchConfig,
+    ) {
+        return this.createFetchFn<"getFile">(
+            "getFile",
+            data,
+            events,
+            fetchConfigs,
+        );
     }
 }
