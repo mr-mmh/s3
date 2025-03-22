@@ -1,5 +1,11 @@
 # @mrmmh/s3
 
+## 0.0.8
+
+### Patch Changes
+
+- ee6a7d5: update sdk and add getFile to sdk
+
 ## 0.0.7
 
 ### Patch Changes
